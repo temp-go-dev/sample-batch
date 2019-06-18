@@ -36,19 +36,32 @@ func NewExitError(exitCode int, messageID string, err error) *ExitError {
 	}
 }
 
-// HandleExit errorハンドラー
+// HandleExit errorのハンドリングを行う
 func HandleExit(err error) int {
+
+	// Errorが設定されていない場合
 	if err == nil {
 		return ExitCodeOK
 	}
 
+	// ExitErrorの場合
 	if e, ok := err.(*ExitError); ok {
-		// logging処理をして、終了コードを返却
+		fmt.Println("errorHandle!! ExitErrorType")
+
 		fmt.Printf("messageID:%v\n", e.messageID)
 		fmt.Printf("err:%v\n", e.err)
 		fmt.Printf("exitCode:%v\n", e.exitCode)
 		return e.exitCode
 	}
+
+	// errorの場合
+	if e, ok := err.(error); ok {
+		fmt.Println("errorHandle!! errorType")
+		fmt.Printf("error:%v\n", e)
+		return ExitCodeError
+	}
+
+
 
 	return ExitCodeOK
 }
